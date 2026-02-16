@@ -5,9 +5,11 @@ import Link from 'next/link'
 import { User, Menu, X, Facebook, Instagram } from 'lucide-react'
 
 const navLinks = [
-  { href: '/torti', label: 'Торти' },
+  { href: '/cakes', label: 'Торти' },
   { href: '/specials', label: 'За повод' },
   { href: '/sweets', label: 'Сладкиши' },
+  { href: '/chocolate', label: 'Шоколад' },
+  { href: '/ketering', label: 'Кетеринг' },
   { href: '#', label: 'За Нас' },
   { href: '#', label: 'Контакти' },
 ]
