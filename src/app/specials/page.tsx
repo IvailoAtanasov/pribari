@@ -33,8 +33,18 @@ const specialsQuery = groq`
   }
 `
 
+
 async function getSpecials(): Promise<Special[]> {
-  return client.fetch(specialsQuery)
+  return client.fetch(
+    specialsQuery, 
+    {}, 
+    { 
+      next: { 
+        revalidate: 60, // Re-check for new content every 60 seconds
+        tags: ['specials']  // Tagging this makes it easier to clear later
+      } 
+    }
+  )
 }
 
 export default async function SpecialsPage() {

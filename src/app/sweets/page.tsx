@@ -33,8 +33,18 @@ const sweetsQuery = groq`
   }
 `
 
+
 async function getSweets(): Promise<Sweet[]> {
-  return client.fetch(sweetsQuery)
+  return client.fetch(
+    sweetsQuery, 
+    {}, 
+    { 
+      next: { 
+        revalidate: 60, // Re-check for new content every 60 seconds
+        tags: ['sweets']  // Tagging this makes it easier to clear later
+      } 
+    }
+  )
 }
 
 export default async function SweetsPage() {

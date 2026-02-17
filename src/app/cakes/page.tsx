@@ -34,7 +34,16 @@ const cakesQuery = groq`
 `
 
 async function getCakes(): Promise<Cake[]> {
-  return client.fetch(cakesQuery)
+  return client.fetch(
+    cakesQuery, 
+    {}, 
+    { 
+      next: { 
+        revalidate: 60, // Re-check for new content every 60 seconds
+        tags: ['cake']  // Tagging this makes it easier to clear later
+      } 
+    }
+  )
 }
 
 export default async function TortiPage() {

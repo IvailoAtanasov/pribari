@@ -34,7 +34,16 @@ const chocolateQuery = groq`
 `
 
 async function getChocolate(): Promise<Chocolate[]> {
-  return client.fetch(chocolateQuery)
+  return client.fetch(
+    chocolateQuery, 
+    {}, 
+    { 
+      next: { 
+        revalidate: 60, // Re-check for new content every 60 seconds
+        tags: ['chocolate']  // Tagging this makes it easier to clear later
+      } 
+    }
+  )
 }
 
 export default async function ChocolatePage() {
