@@ -12,6 +12,7 @@ type Chocolate = {
   imageUrl: string
   slug: string
   order?: number
+  priceUnit?: string
 }
 
 const calculateEuro = (levaPrice: string) => {
@@ -27,6 +28,7 @@ const chocolateQuery = groq`
     name,
     description,
     price,
+    priceUnit,
     "imageUrl": image.asset->url,
     "slug": slug.current,
     order
@@ -107,12 +109,17 @@ export default async function ChocolatePage() {
                     {product.name}
                   </h3>
                   <p
-                    className="text-lg font-bold"
+                    className="text-lg font-bold flex items-baseline justify-between"
                     style={{ color: '#500050', fontFamily: 'IdealistSans, sans-serif' }}
                   >
-                    {product.price === 'По запитване'
-                      ? product.price
-                      : `${calculateEuro(product.price)}€ | ${product.price.replace(/ лв.*/, 'лв')}`}
+                    <span>
+                      {product.price === 'По запитване'
+                        ? product.price
+                        : `${calculateEuro(product.price)}€ | ${product.price.replace(/ лв.*/, 'лв')}`}
+                    </span>
+                    {product.priceUnit ? (
+                      <span className="text-lg font-bold ml-3">{product.priceUnit}</span>
+                    ) : null}
                   </p>
                 </div>
               </Link>
