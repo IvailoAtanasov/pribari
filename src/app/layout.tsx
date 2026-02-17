@@ -4,6 +4,7 @@ import "./globals.css";
 import PromoBanner from "@/components/layout/PromoBanner";
 import Navbar from "@/components/layout/Navbar";
 import DiscountBanner from "@/components/DiscountBanner";
+import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
         <Navbar />
         <DiscountBanner />
         {children}
+        <Footer />
       </body>
     </html>
   );
