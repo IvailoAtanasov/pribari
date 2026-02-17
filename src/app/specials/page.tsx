@@ -1,65 +1,45 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { groq } from 'next-sanity'
+
+import { client } from '@/sanity/lib/client'
+
+type Special = {
+  _id: string
+  name: string
+  description?: string
+  price: string
+  imageUrl: string
+  slug: string
+  order?: number
+}
 
 const calculateEuro = (levaPrice: string) => {
-  const leva = parseFloat(levaPrice.replace(' лв/парче', ''));
-  if (isNaN(leva)) return '';
-  const euro = leva / 1.95583;
-  return euro.toFixed(2);
-};
+  const numeric = parseFloat(levaPrice.replace(/[^0-9.,]/g, '').replace(',', '.'))
+  if (Number.isNaN(numeric)) return ''
+  const euro = numeric / 1.95583
+  return euro.toFixed(2)
+}
 
-const specialsProducts = [
-  {
-    id: 1,
-    name: 'Класическа сватбена торта',
-    description: 'Традиционна бяла торта с крем и декорации.',
-    price: 'По запитване',
-    image: '/img/1.png',
-    href: '/specials/klasicheska-svatbena-torta'
-  },
-  {
-    id: 2,
-    name: 'Романтична розова торта',
-    description: 'Нежна розова торта с цветя и крем.',
-    price: 'По запитване',
-    image: '/img/2.png',
-    href: '/specials/romantichna-rozova-torta'
-  },
-  {
-    id: 3,
-    name: 'Елегантна торта с цветя',
-    description: 'Бяла торта с свежи цветя и декорации.',
-    price: 'По запитване',
-    image: '/img/3.png',
-    href: '/specials/elegantna-torta-s-cvetya'
-  },
-  {
-    id: 4,
-    name: 'Шоколадова сватбена торта',
-    description: 'Богата шоколадова торта с крем.',
-    price: 'По запитване',
-    image: '/img/4.png',
-    href: '/specials/shokoladova-svatbena-torta'
-  },
-  {
-    id: 5,
-    name: 'Торте за момче',
-    description: 'Синя торта с тематични декорации.',
-    price: 'По запитване',
-    image: '/img/5.png',
-    href: '/specials/torte-za-momche'
-  },
-  {
-    id: 6,
-    name: 'Торте за момиче',
-    description: 'Розова торта с принцеси и цветя.',
-    price: 'По запитване',
-    image: '/img/6.png',
-    href: '/specials/torte-za-momiche'
-  },
-]
+const specialsQuery = groq`
+  *[_type == "special"]|order(order asc){
+    _id,
+    name,
+    description,
+    price,
+    "imageUrl": image.asset->url,
+    "slug": slug.current,
+    order
+  }
+`
 
-export default function SpecialsPage() {
+async function getSpecials(): Promise<Special[]> {
+  return client.fetch(specialsQuery)
+}
+
+export default async function SpecialsPage() {
+  const specialsProducts = await getSpecials()
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -101,15 +81,15 @@ export default function SpecialsPage() {
       <section className="py-16" style={{ backgroundColor: '#f6edf6' }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {specialsProducts.map((product) => (
+            {specialsProducts.map((product: Special) => (
               <Link
-                key={product.id}
-                href={product.href}
+                key={product._id}
+                href={`/specials/${product.slug}`}
                 className="group rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="relative aspect-square overflow-hidden">
                   <Image
-                    src={product.image}
+                    src={product.imageUrl}
                     alt={product.name}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -127,7 +107,9 @@ export default function SpecialsPage() {
                     className="text-lg font-bold"
                     style={{ color: '#500050', fontFamily: 'IdealistSans, sans-serif' }}
                   >
-                    {product.price === 'По запитване' ? product.price : `${calculateEuro(product.price)}€ | ${product.price.replace(' лв/парче', 'лв')}`}
+                    {product.price === 'По запитване'
+                      ? product.price
+                      : `${calculateEuro(product.price)}€ | ${product.price.replace(/ лв.*/, 'лв')}`}
                   </p>
                 </div>
               </Link>

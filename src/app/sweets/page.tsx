@@ -1,132 +1,45 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { groq } from 'next-sanity'
+
+import { client } from '@/sanity/lib/client'
+
+type Sweet = {
+  _id: string
+  name: string
+  description?: string
+  price: string
+  imageUrl: string
+  slug: string
+  order?: number
+}
 
 const calculateEuro = (levaPrice: string) => {
-  const leva = parseFloat(levaPrice.replace(/ лв\/.*/, ''));
-  if (isNaN(leva)) return '';
-  const euro = leva / 1.95583;
-  return euro.toFixed(2);
-};
+  const numeric = parseFloat(levaPrice.replace(/[^0-9.,]/g, '').replace(',', '.'))
+  if (Number.isNaN(numeric)) return ''
+  const euro = numeric / 1.95583
+  return euro.toFixed(2)
+}
 
-const sweetsProducts = [
-  // Sweets
-  {
-    id: 1,
-    name: 'Кайзер Шмарен',
-    description: 'Кралска Палачинка (предлага се само на място)',
-    price: '10.50 лв/брой',
-    image: '/img/viber_image_2021-07-20_18-34-49-909.jpg',
-    href: '/sweets/kajzer-shmaren'
-  },
-  // Cookies
-  {
-    id: 2,
-    name: 'Домашни бисквитки с шоколад',
-    description: 'Прясно изпечени бисквитки с шоколад',
-    price: '7.50 лв/кг',
-    image: '/img/0001.JPG',
-    href: '/sweets/domashni-biskvitki-s-shokolad'
-  },
-  {
-    id: 3,
-    name: 'Бисквитки с бадеми',
-    description: 'Хрупкави бисквитки с бадеми',
-    price: '8.50 лв/кг',
-    image: '/img/0002.JPG',
-    href: '/sweets/biskvitki-s-bademi'
-  },
-  {
-    id: 4,
-    name: 'Бисквитки с орехи',
-    description: 'Крехки бисквитки с орехи',
-    price: '8.50 лв/кг',
-    image: '/img/0006.JPG',
-    href: '/sweets/biskvitki-s-orehi'
-  },
-  {
-    id: 5,
-    name: 'Бисквитки с мак',
-    description: 'Традиционни бисквитки с мак',
-    price: '7.50 лв/кг',
-    image: '/img/0009.JPG',
-    href: '/sweets/biskvitki-s-mak'
-  },
-  {
-    id: 6,
-    name: 'Бисквитки с лешници',
-    description: 'Богати бисквитки с лешници',
-    price: '9.50 лв/кг',
-    image: '/img/0012.JPG',
-    href: '/sweets/biskvitki-s-leshnici'
-  },
-  {
-    id: 7,
-    name: 'Бисквитки с кокос',
-    description: 'Тропически бисквитки с кокос',
-    price: '8.50 лв/кг',
-    image: '/img/0013.JPG',
-    href: '/sweets/biskvitki-s-kokos'
-  },
-  // Chocolate
-  {
-    id: 8,
-    name: 'Шоколадови бонбони',
-    description: 'Вкусни шоколадови бонбони ръчно изработени',
-    price: '15.00 лв/кг',
-    image: '/img/0007.JPG',
-    href: '/sweets/shokoladovi-bonboni'
-  },
-  {
-    id: 9,
-    name: 'Шоколадови пръчици',
-    description: 'Хрупкави шоколадови пръчици',
-    price: '12.00 лв/кг',
-    image: '/img/0076.JPG',
-    href: '/sweets/shokoladovi-pruchici'
-  },
-  {
-    id: 10,
-    name: 'Шоколадови фигури',
-    description: 'Шоколадови фигури по поръчка',
-    price: '20.00 лв/кг',
-    image: '/img/0078.JPG',
-    href: '/sweets/shokoladovi-figuri'
-  },
-  {
-    id: 11,
-    name: 'Шоколадова торта',
-    description: 'Богата шоколадова торта',
-    price: '25.00 лв/кг',
-    image: '/img/0085.JPG',
-    href: '/sweets/shokoladova-torta'
-  },
-  {
-    id: 13,
-    name: 'Австрийски бисквити',
-    description: 'бисквити с три вида ядки и лимонов сок',
-    price: '3.5 лв/100гр',
-    image: '/img/0049.JPG',
-    href: '/sweets/avstrijski-biskviti'
-  },
-  {
-    id: 14,
-    name: 'Шприц',
-    description: 'Бисквити с мармалад и шоколад',
-    price: '3 лв/100гр',
-    image: '/img/0050.JPG',
-    href: '/sweets/shpric'
-  },
-  {
-    id: 15,
-    name: 'Кокосов Сладки',
-    description: 'Кокос и шоколад',
-    price: '3.5 лв/100гр',
-    image: '/img/0052.JPG',
-    href: '/sweets/kokosov-sladki'
-  },
-]
+const sweetsQuery = groq`
+  *[_type == "sweet"]|order(order asc){
+    _id,
+    name,
+    description,
+    price,
+    "imageUrl": image.asset->url,
+    "slug": slug.current,
+    order
+  }
+`
 
-export default function SweetsPage() {
+async function getSweets(): Promise<Sweet[]> {
+  return client.fetch(sweetsQuery)
+}
+
+export default async function SweetsPage() {
+  const sweetsProducts = await getSweets();
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -162,15 +75,15 @@ export default function SweetsPage() {
       <section className="py-16" style={{ backgroundColor: '#f6edf6' }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {sweetsProducts.map((product) => (
+            {sweetsProducts.map((product: Sweet) => (
               <Link
-                key={product.id}
-                href={product.href}
+                key={product._id}
+                href={`/sweets/${product.slug}`}
                 className="group rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="relative aspect-square overflow-hidden">
                   <Image
-                    src={product.image}
+                    src={product.imageUrl}
                     alt={product.name}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -188,7 +101,9 @@ export default function SweetsPage() {
                     className="text-lg font-bold"
                     style={{ color: '#500050', fontFamily: 'IdealistSans, sans-serif' }}
                   >
-                    {product.price === 'По запитване' ? product.price : `${calculateEuro(product.price)}€ | ${product.price.replace(/ лв\/.*/, 'лв')}`}
+                    {product.price === 'По запитване'
+                      ? product.price
+                      : `${calculateEuro(product.price)}€ | ${product.price.replace(/ лв.*/, 'лв')}`}
                   </p>
                 </div>
               </Link>

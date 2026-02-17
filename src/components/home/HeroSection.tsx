@@ -29,7 +29,7 @@ export default function HeroSection() {
           Домашно приготвени торти, бисквити и десерти с много любов
         </p>
         <a
-          href="/torti"
+          href="/cakes"
           className="mt-8 px-8 py-3 rounded-full font-medium transition-all hover:scale-105 hover:bg-[#500050] hover:text-[#f6edf6] border-2"
           style={{
             backgroundColor: 'transparent',

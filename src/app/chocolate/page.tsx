@@ -1,57 +1,45 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { groq } from 'next-sanity'
+
+import { client } from '@/sanity/lib/client'
+
+type Chocolate = {
+  _id: string
+  name: string
+  description?: string
+  price: string
+  imageUrl: string
+  slug: string
+  order?: number
+}
 
 const calculateEuro = (levaPrice: string) => {
-  const leva = parseFloat(levaPrice.replace(/ лв\/.*/, ''));
-  if (isNaN(leva)) return '';
-  const euro = leva / 1.95583;
-  return euro.toFixed(2);
-};
+  const numeric = parseFloat(levaPrice.replace(/[^0-9.,]/g, '').replace(',', '.'))
+  if (Number.isNaN(numeric)) return ''
+  const euro = numeric / 1.95583
+  return euro.toFixed(2)
+}
 
-const chocolateProducts = [
-  {
-    id: 1,
-    name: 'Шоколадови бонбони',
-    description: 'Вкусни шоколадови бонбони ръчно изработени',
-    price: '15.00 лв/кг',
-    image: '/img/0007.JPG',
-    href: '/chocolate/shokoladovi-bonboni'
-  },
-  {
-    id: 2,
-    name: 'Шоколадови пръчици',
-    description: 'Хрупкави шоколадови пръчици',
-    price: '12.00 лв/кг',
-    image: '/img/0076.JPG',
-    href: '/chocolate/shokoladovi-pruchici'
-  },
-  {
-    id: 3,
-    name: 'Шоколадови фигури',
-    description: 'Шоколадови фигури по поръчка',
-    price: '20.00 лв/кг',
-    image: '/img/0078.JPG',
-    href: '/chocolate/shokoladovi-figuri'
-  },
-  {
-    id: 4,
-    name: 'Шоколадова торта',
-    description: 'Богата шоколадова торта',
-    price: '25.00 лв/кг',
-    image: '/img/0085.JPG',
-    href: '/chocolate/shokoladova-torta'
-  },
-  {
-    id: 5,
-    name: 'Бели шоколадови бонбони',
-    description: 'Кремави бели шоколадови бонбони',
-    price: '16.00 лв/кг',
-    image: '/img/0087.JPG',
-    href: '/chocolate/beli-shokoladovi-bonboni'
-  },
-]
+const chocolateQuery = groq`
+  *[_type == "chocolate"]|order(order asc){
+    _id,
+    name,
+    description,
+    price,
+    "imageUrl": image.asset->url,
+    "slug": slug.current,
+    order
+  }
+`
 
-export default function ChocolatePage() {
+async function getChocolate(): Promise<Chocolate[]> {
+  return client.fetch(chocolateQuery)
+}
+
+export default async function ChocolatePage() {
+  const chocolateProducts = await getChocolate()
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -61,7 +49,7 @@ export default function ChocolatePage() {
         <div
           className="absolute inset-0 animate-slow-zoom"
           style={{
-            backgroundImage: 'url(/img/0007.JPG)',
+            backgroundImage: 'url(/img/0062.JPG)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -87,15 +75,15 @@ export default function ChocolatePage() {
       <section className="py-16" style={{ backgroundColor: '#f6edf6' }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {chocolateProducts.map((product) => (
+            {chocolateProducts.map((product: Chocolate) => (
               <Link
-                key={product.id}
-                href={product.href}
+                key={product._id}
+                href={`/chocolate/${product.slug}`}
                 className="group rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="relative aspect-square overflow-hidden">
                   <Image
-                    src={product.image}
+                    src={product.imageUrl}
                     alt={product.name}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -113,7 +101,9 @@ export default function ChocolatePage() {
                     className="text-lg font-bold"
                     style={{ color: '#500050', fontFamily: 'IdealistSans, sans-serif' }}
                   >
-                    {product.price === 'По запитване' ? product.price : `${calculateEuro(product.price)}€ | ${product.price.replace(/ лв\/.*/, 'лв')}`}
+                    {product.price === 'По запитване'
+                      ? product.price
+                      : `${calculateEuro(product.price)}€ | ${product.price.replace(/ лв.*/, 'лв')}`}
                   </p>
                 </div>
               </Link>
