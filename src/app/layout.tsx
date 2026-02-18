@@ -7,6 +7,7 @@ import DiscountBanner from "@/components/DiscountBanner";
 import { ClerkProvider } from '@clerk/nextjs'
 import { bgBG } from "@clerk/localizations";
 import type { LocalizationResource } from "@clerk/types";
+import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -132,6 +133,7 @@ export default function RootLayout({
           <Navbar />
           <DiscountBanner />
           {children}
+          <Footer />
         </ClerkProvider>
         
       </body>
