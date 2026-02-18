@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { User, Menu, X, Facebook, Instagram } from 'lucide-react'
+// 1. Import Clerk Components
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 
 const navLinks = [
   { href: '/cakes', label: 'Торти' },
@@ -20,9 +22,7 @@ export default function Navbar() {
   return (
     <nav
       className="w-full py-6 fixed md:sticky top-0 z-50 md:z-40"
-      style={{
-        backgroundColor: '#f6edf6',
-      }}
+      style={{ backgroundColor: '#f6edf6' }}
     >
       <div className="max-w-7xl mx-auto px-4 flex items-center">
         {/* Logo - Left */}
@@ -51,7 +51,7 @@ export default function Navbar() {
                     const sectionId = link.label === 'За Нас' ? 'about' : 'footer';
                     const element = document.getElementById(sectionId);
                     if (element) {
-                      const navbarHeight = 80; // Approximate navbar height
+                      const navbarHeight = 80;
                       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
                       window.scrollTo({ top: elementPosition, behavior: 'smooth' });
                     } else {
@@ -69,14 +69,27 @@ export default function Navbar() {
         </ul>
 
         {/* User Icon - Right (Desktop) */}
-        <div className="w-[207px] flex-shrink-0 hidden md:flex justify-end">
-          <Link
-            href="/sign-in"
-            className="flex items-center justify-center p-2 text-gray-700 hover:text-[#500050] transition-colors"
-            aria-label="Вход"
-          >
-            <User className="w-6 h-6" />
-          </Link>
+        <div className="w-[207px] flex-shrink-0 hidden md:flex justify-end items-center">
+          {/* 2. Desktop Clerk Logic */}
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button
+                className="flex items-center justify-center p-2 text-gray-700 hover:text-[#500050] transition-colors"
+                aria-label="Вход"
+              >
+                <User className="w-6 h-6" />
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton 
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: "w-9 h-9"
+                }
+              }}
+            />
+          </SignedIn>
         </div>
 
         {/* Mobile menu button */}
@@ -85,11 +98,7 @@ export default function Navbar() {
           aria-label={isMenuOpen ? 'Затвори меню' : 'Отвори меню'}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {isMenuOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
+          {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
@@ -111,7 +120,7 @@ export default function Navbar() {
                     const sectionId = link.label === 'За Нас' ? 'about' : 'footer';
                     const element = document.getElementById(sectionId);
                     if (element) {
-                      const navbarHeight = 80; // Approximate navbar height
+                      const navbarHeight = 80;
                       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
                       window.scrollTo({ top: elementPosition, behavior: 'smooth' });
                     } else {
@@ -127,17 +136,31 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
-          <li>
-            <Link
-              href="/sign-in"
-              className="flex items-center gap-2 px-6 py-3 text-gray-700 hover:text-[#500050] hover:bg-white/50 transition-colors font-medium"
-              style={{ fontFamily: 'IdealistSans, sans-serif' }}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <User size={18} />
-              Вход
-            </Link>
+
+          {/* 3. Mobile Clerk Logic */}
+          <li className="border-t border-[#500050]/10 mt-2 pt-2">
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button
+                  className="w-full text-left flex items-center gap-2 px-6 py-3 text-gray-700 hover:text-[#500050] hover:bg-white/50 transition-colors font-medium"
+                  style={{ fontFamily: 'IdealistSans, sans-serif' }}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <User size={18} />
+                  Вход / Регистрация
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <div className="px-6 py-3 flex items-center gap-4">
+                <UserButton />
+                <span className="text-gray-700 font-medium" style={{ fontFamily: 'IdealistSans, sans-serif' }}>
+                  Профил
+                </span>
+              </div>
+            </SignedIn>
           </li>
+
           <li className="mt-8 flex justify-center space-x-4">
             <a
               href="https://www.facebook.com/torti.priBari/"

@@ -10,7 +10,7 @@ const featuredProducts = [
     description: 'Нежна баварска крем с шоколад и бисквитена основа',
     price: '7.50 лв/парче',
     image: '/img/0027.JPG',
-    href: '/torti/bavarsko-izkushenie',
+    href: '/cakes/bavarsko-izkushenie',
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ const featuredProducts = [
     description: 'Пандишпан с шанфъстък и свежи малини',
     price: '7.50 лв/парче',
     image: '/img/0022.JPG',
-    href: '/torti/shanfustak-i-malini',
+    href: '/cakes/shanfustak-i-malini',
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ const featuredProducts = [
     description: 'Орехов пандишпанен блат в комбинация с гриляж от ядки и домашен крем',
     price: '7.50 лв/парче',
     image: '/img/0009.JPG',
-    href: '/torti/snejanka',
+    href: '/cakes/snejanka',
   },
   {
     id: 4,
@@ -34,7 +34,7 @@ const featuredProducts = [
     description: 'Целувачен блат в комбинация с нежен крем от домашна сметана и горски плодове',
     price: '7.50 лв/парче',
     image: '/img/0013.JPG',
-    href: '/torti/pavlova',
+    href: '/cakes/pavlova',
   },
 ]
 
@@ -77,6 +77,7 @@ export default function FeaturedProducts() {
                   src={product.image}
                   alt={product.name}
                   fill
+                  sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   style={{ backgroundColor: '#f6edf6' }}
                 />

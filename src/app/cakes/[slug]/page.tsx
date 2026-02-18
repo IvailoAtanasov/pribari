@@ -57,7 +57,14 @@ export default async function CakeDetailPage({ params }: { params: Promise<{ slu
         <div className="grid md:grid-cols-3 gap-10 items-start">
           <div className="md:col-span-2">
             <div className="relative w-full h-[420px] md:h-[520px] overflow-hidden">
-              <Image src={imageUrl} alt={name} fill className="object-cover" />
+              <Image
+                src={imageUrl}
+                alt={name}
+                quality={95}
+                fill
+                sizes="(min-width: 1280px) 50vw, (min-width: 768px) 66vw, 100vw"
+                className="object-cover"
+              />
             </div>
           </div>
 

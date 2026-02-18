@@ -54,8 +54,14 @@ export default async function ChocolateDetailPage({ params }: { params: { slug: 
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-10 items-start">
           <div className="md:col-span-2">
-            <div className="relative w-full h-[420px] md:h-[520px] overflow-hidden rounded-2xl shadow-lg">
-              <Image src={imageUrl} alt={name} fill className="object-cover" />
+            <div className="relative w-full h-[420px] md:h-[520px] overflow-hidden">
+              <Image
+                src={imageUrl}
+                alt={name}
+                fill
+                sizes="(min-width: 1280px) 50vw, (min-width: 768px) 66vw, 100vw"
+                className="object-cover"
+              />
             </div>
           </div>
 

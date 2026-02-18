@@ -19,7 +19,7 @@ const formatPrice = (eur: string | number) => {
   const numeric = Number(String(eur).replace(/[^0-9.,-]/g, '').replace(',', '.'))
   if (!Number.isFinite(numeric)) return String(eur)
   const euro = numeric.toFixed(2)
-  const bgn = (numeric / 1.95583).toFixed(2)
+  const bgn = (numeric * 1.95583).toFixed(2)
   return `${euro}€ | ${bgn} лв`
 }
 
@@ -86,9 +86,11 @@ export default async function TortiPage() {
               >
                 <div className="relative aspect-square overflow-hidden">
                   <Image
-                    src={product.imageUrl}
+                    // Make sure this matches the key in your query ("imageUrl")
+                    src={product.imageUrl} 
                     alt={product.name}
                     fill
+                    quality={95} // This stops Next.js from making it blurry
                     sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                     style={{ backgroundColor: '#f6edf6' }}

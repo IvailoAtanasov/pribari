@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/localizations": "^3.35.5",
+    "@clerk/nextjs": "^6.37.5",
     "@radix-ui/react-slot": "^1.2.4",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.22.0",
