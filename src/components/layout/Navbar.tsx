@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { User, Menu, X, Facebook, Instagram } from 'lucide-react'
+import { User, Menu, X, Facebook, Instagram, ShoppingBag  } from 'lucide-react'
 // 1. Import Clerk Components
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
+
 
 const navLinks = [
   { href: '/cakes', label: 'Торти' },
@@ -69,7 +70,14 @@ export default function Navbar() {
         </ul>
 
         {/* User Icon - Right (Desktop) */}
-        <div className="w-[207px] flex-shrink-0 hidden md:flex justify-end items-center">
+        <div className="w-[207px] flex-shrink-0 hidden md:flex justify-end items-center gap-2">
+          <Link
+            href="/cart"
+            className="flex items-center justify-center p-2 text-gray-700 hover:text-[#500050] transition-colors"
+            aria-label="Кошница"
+          >
+            <ShoppingBag className="w-6 h-6" />
+          </Link>
           {/* 2. Desktop Clerk Logic */}
           <SignedOut>
             <SignInButton mode="modal">
@@ -92,14 +100,23 @@ export default function Navbar() {
           </SignedIn>
         </div>
 
-        {/* Mobile menu button */}
-        <button
-          className="md:hidden p-2 ml-auto text-gray-700 hover:text-[#500050] transition-colors"
-          aria-label={isMenuOpen ? 'Затвори меню' : 'Отвори меню'}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {/* Mobile cart + menu button */}
+        <div className="md:hidden flex items-center ml-auto gap-2">
+          <Link
+            href="/cart"
+            className="p-2 text-gray-700 hover:text-[#500050] transition-colors"
+            aria-label="Кошница"
+          >
+            <ShoppingBag className="w-6 h-6" />
+          </Link>
+          <button
+            className="p-2 text-gray-700 hover:text-[#500050] transition-colors"
+            aria-label={isMenuOpen ? 'Затвори меню' : 'Отвори меню'}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Slide-in Panel */}
