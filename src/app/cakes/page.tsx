@@ -8,18 +8,19 @@ type Cake = {
   _id: string
   name: string
   description?: string
-  price: string
+  price: number | string
   imageUrl: string
   slug: string
   order?: number
   priceUnit?: string
 }
 
-const calculateEuro = (levaPrice: string) => {
-  const numeric = parseFloat(levaPrice.replace(/[^0-9.,]/g, '').replace(',', '.'))
-  if (Number.isNaN(numeric)) return ''
-  const euro = numeric / 1.95583
-  return euro.toFixed(2)
+const formatPrice = (eur: string | number) => {
+  const numeric = Number(String(eur).replace(/[^0-9.,-]/g, '').replace(',', '.'))
+  if (!Number.isFinite(numeric)) return String(eur)
+  const euro = numeric.toFixed(2)
+  const bgn = (numeric / 1.95583).toFixed(2)
+  return `${euro}€ | ${bgn} лв`
 }
 
 const cakesQuery = groq`
@@ -88,6 +89,7 @@ export default async function TortiPage() {
                     src={product.imageUrl}
                     alt={product.name}
                     fill
+                    sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                     style={{ backgroundColor: '#f6edf6' }}
                   />
@@ -99,12 +101,14 @@ export default async function TortiPage() {
                   >
                     {product.name}
                   </h3>
-                  <p
+                   <p
                     className="text-lg font-bold flex items-baseline justify-between"
                     style={{ color: '#500050', fontFamily: 'IdealistSans, sans-serif' }}
                   >
-                    <span>{calculateEuro(product.price)}€ | {product.price.replace(' лв/парче', 'лв')}</span>
-                    {product.priceUnit ? <span className="text-lg font-bold ml-3">{product.priceUnit}</span> : null}
+                    <span>{formatPrice(product.price)}</span>
+                    {product.priceUnit ? (
+                      <span className="text-lg font-bold ml-3">{product.priceUnit}</span>
+                    ) : null}
                   </p>
                 </div>
               </Link>

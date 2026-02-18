@@ -7,6 +7,14 @@ import { client } from '@/sanity/lib/client'
 import DetailActions from '@/components/product/DetailActions'
 import type { DetailContent } from '@/components/product/DetailActions'
 
+const formatPrice = (eur: string | number) => {
+  const numeric = Number(String(eur).replace(/[^0-9.,-]/g, '').replace(',', '.'))
+  if (!Number.isFinite(numeric)) return ''
+  const euro = numeric.toFixed(2)
+  const bgn = (numeric * 1.95583).toFixed(2)
+  return `${euro}€ | ${bgn} лв`
+}
+
 const cakeDetailQuery = groq`
   *[_type == "cake" && slug.current == $slug][0]{
     name,
@@ -57,7 +65,7 @@ export default async function CakeDetailPage({ params }: { params: Promise<{ slu
             <h1 className="text-3xl font-bold" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{name}</h1>
             {description ? <p className="text-base text-gray-700" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{description}</p> : null}
             <p className="text-xl flex items-baseline justify-between">
-              <span>{price}</span>
+              <span>{formatPrice(price)}</span>
               {priceUnit ? <span className="text-xl ml-3">{priceUnit}</span> : null}
             </p>
             {additionalDetails ? (

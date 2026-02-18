@@ -43,8 +43,8 @@ export default defineType({
     }),
     defineField({
       name: 'price',
-      title: 'Price (e.g. 7.50 лв/парче)',
-      type: 'string',
+      title: 'Price (EUR)',
+      type: 'number',
       validation: (rule) => rule.required(),
     }),
     defineField({

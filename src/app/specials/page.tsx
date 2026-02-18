@@ -8,18 +8,19 @@ type Special = {
   _id: string
   name: string
   description?: string
-  price: string
+  price: number | string
   imageUrl: string
   slug: string
   order?: number
   priceUnit?: string
 }
 
-const calculateEuro = (levaPrice: string) => {
-  const numeric = parseFloat(levaPrice.replace(/[^0-9.,]/g, '').replace(',', '.'))
-  if (Number.isNaN(numeric)) return ''
-  const euro = numeric / 1.95583
-  return euro.toFixed(2)
+const formatPrice = (eur: string | number) => {
+  const numeric = Number(String(eur).replace(/[^0-9.,-]/g, '').replace(',', '.'))
+  if (!Number.isFinite(numeric)) return ''
+  const euro = numeric.toFixed(2)
+  const bgn = (numeric * 1.95583).toFixed(2)
+  return `${euro}€ | ${bgn} лв`
 }
 
 const specialsQuery = groq`
@@ -119,11 +120,7 @@ export default async function SpecialsPage() {
                     className="text-lg font-bold flex items-baseline justify-between"
                     style={{ color: '#500050', fontFamily: 'IdealistSans, sans-serif' }}
                   >
-                    <span>
-                      {product.price === 'По запитване'
-                        ? product.price
-                        : `${calculateEuro(product.price)}€ | ${product.price.replace(/ лв.*/, 'лв')}`}
-                    </span>
+                    <span>{formatPrice(product.price)}</span>
                     {product.priceUnit ? (
                       <span className="text-lg font-bold ml-3">{product.priceUnit}</span>
                     ) : null}

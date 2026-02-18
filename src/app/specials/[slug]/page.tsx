@@ -6,6 +6,14 @@ import DetailActions from '@/components/product/DetailActions'
 import type { DetailContent } from '@/components/product/DetailActions'
 import { client } from '@/sanity/lib/client'
 
+const formatPrice = (eur: string | number) => {
+  const numeric = Number(String(eur).replace(/[^0-9.,-]/g, '').replace(',', '.'))
+  if (!Number.isFinite(numeric)) return ''
+  const euro = numeric.toFixed(2)
+  const bgn = (numeric * 1.95583).toFixed(2)
+  return `${euro}€ | ${bgn} лв`
+}
+
 const specialDetailQuery = groq`
   *[_type == "special" && slug.current == $slug][0]{
     name,
@@ -65,11 +73,11 @@ export default async function SpecialDetailPage({ params }: { params: Promise<{ 
 
           <div className="md:col-span-1 p-0 space-y-4" style={{ color: '#500050' }}>
             <h1 className="text-3xl font-bold" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{name}</h1>
-            {description ? <p className="text-base text-gray-700" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{description}</p> : null}
-            <p className="text-xl flex items-baseline justify-between">
-              <span>{price}</span>
-              {priceUnit ? <span className="text-xl ml-3">{priceUnit}</span> : null}
+            <p className="text-xl font-semibold flex items-baseline justify-between">
+              <span>{formatPrice(price)}</span>
+              {priceUnit ? <span className="text-xl font-semibold ml-3">{priceUnit}</span> : null}
             </p>
+            {description ? <p className="text-base text-gray-700" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{description}</p> : null}
             {additionalDetails ? (
               <div className="pt-2">
                 <h3 className="text-lg mb-1">Допълнителни детайли</h3>
