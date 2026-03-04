@@ -31,8 +31,13 @@ async function getChocolate(slug: string): Promise<DetailContent | null> {
   )
 }
 
-export default async function ChocolateDetailPage({ params }: { params: { slug: string } }) {
-  const product = await getChocolate(params.slug)
+export default async function ChocolateDetailPage({ params }: { params: Promise<{ slug: string | string[] }> }) {
+  const resolved = await params
+  const rawSlug = Array.isArray(resolved.slug) ? resolved.slug[0] : resolved.slug
+  if (!rawSlug) return notFound()
+  
+  const slugParam = decodeURIComponent(rawSlug)
+  const product = await getChocolate(slugParam)
 
   if (!product) return notFound()
 
@@ -66,7 +71,7 @@ export default async function ChocolateDetailPage({ params }: { params: { slug: 
           </div>
 
           <div className="md:col-span-1 p-0 space-y-4" style={{ color: '#500050' }}>
-            <h1 className="text-3xl font-bold" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{name}</h1>
+            <h1 className="text-3xl" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{name}</h1>
             {description ? <p className="text-base text-gray-700" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{description}</p> : null}
             <p className="text-xl flex items-baseline justify-between">
               <span>{price}</span>

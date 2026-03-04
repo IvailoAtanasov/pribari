@@ -97,7 +97,7 @@ export default async function ChocolatePage() {
             {chocolateProducts.map((product: Chocolate) => (
               <Link
                 key={product._id}
-                href={`/chocolate/${product.slug}`}
+                href={`/шоколад/${encodeURIComponent(product.slug)}`}
                 className="group rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="relative aspect-square overflow-hidden">
@@ -112,7 +112,7 @@ export default async function ChocolatePage() {
                 </div>
                 <div className="p-4 text-left">
                   <h3
-                    className="text-xl font-semibold mb-1"
+                    className="text-xl mb-1"
                     style={{ color: '#500050', fontFamily: 'IdealistSans, sans-serif' }}
                   >
                     {product.name}

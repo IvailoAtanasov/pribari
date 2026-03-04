@@ -78,7 +78,7 @@ export default async function SpecialDetailPage({ params }: { params: Promise<{ 
           </div>
 
           <div className="md:col-span-1 p-0 space-y-4" style={{ color: '#500050' }}>
-            <h1 className="text-3xl font-bold" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{name}</h1>
+            <h1 className="text-3xl" style={{ fontFamily: 'IdealistSans, sans-serif' }}>{name}</h1>
             <p className="text-xl font-semibold flex items-baseline justify-between">
               <span>{formatPrice(price)}</span>
               {priceUnit ? <span className="text-xl font-semibold ml-3">{priceUnit}</span> : null}
