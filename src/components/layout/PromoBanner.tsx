@@ -9,6 +9,9 @@ const slides = [
   {
     text: 'Посетете ни на ул. Генерал Казимир Ернрод 34',
   },
+  {
+    text: 'Позвънете на +359 885 650 835',
+  }
 ]
 
 export default function PromoBanner() {

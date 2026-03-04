@@ -71,6 +71,37 @@ export default defineType({
       title: 'Order',
       type: 'number',
     }),
+    defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'reference',
+      to: [{ type: 'cakeCategory' }],
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured',
+      type: 'boolean',
+      description: 'Show this cake in the Featured Products section on the homepage',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'SEO tags for this product (e.g., "торта", "шоколад", "рожден ден")',
+      options: {
+        layout: 'tags',
+      },
+    }),
+    defineField({
+      name: 'sizes',
+      title: 'Sizes (number of pieces)',
+      type: 'array',
+      of: [{ type: 'number' }],
+      description: 'Available sizes in number of pieces (e.g., 8, 12, 16, 20)',
+    }),
   ],
   orderings: [
     {

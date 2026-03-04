@@ -1,50 +1,46 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
+import { groq } from 'next-sanity'
+import { client } from '@/sanity/lib/client'
 
-const featuredProducts = [
-  {
-    id: 1,
-    name: 'Баварско изкушение',
-    description: 'Нежна баварска крем с шоколад и бисквитена основа',
-    price: '7.50 лв/парче',
-    image: '/img/0027.JPG',
-    href: '/cakes/bavarsko-izkushenie',
-  },
-  {
-    id: 2,
-    name: 'Шанфъстък и Малини',
-    description: 'Пандишпан с шанфъстък и свежи малини',
-    price: '7.50 лв/парче',
-    image: '/img/0022.JPG',
-    href: '/cakes/shanfustak-i-malini',
-  },
-  {
-    id: 3,
-    name: 'Снежанка',
-    description: 'Орехов пандишпанен блат в комбинация с гриляж от ядки и домашен крем',
-    price: '7.50 лв/парче',
-    image: '/img/0009.JPG',
-    href: '/cakes/snejanka',
-  },
-  {
-    id: 4,
-    name: 'Павлова',
-    description: 'Целувачен блат в комбинация с нежен крем от домашна сметана и горски плодове',
-    price: '7.50 лв/парче',
-    image: '/img/0013.JPG',
-    href: '/cakes/pavlova',
-  },
-]
+type FeaturedCake = {
+  _id: string
+  name: string
+  description?: string
+  price: number
+  priceUnit?: string
+  imageUrl: string
+  slug: string
+}
 
-const calculateEuro = (levaPrice: string) => {
-  const leva = parseFloat(levaPrice.replace(' лв/парче', ''));
-  const euro = leva / 1.95583;
-  return euro.toFixed(2);
-};
+const featuredCakesQuery = groq`
+  *[_type == "cake" && featured == true]|order(order asc)[0...4]{
+    _id,
+    name,
+    description,
+    price,
+    priceUnit,
+    "imageUrl": image.asset->url,
+    "slug": slug.current
+  }
+`
 
-export default function FeaturedProducts() {
+async function getFeaturedCakes(): Promise<FeaturedCake[]> {
+  return client.fetch(
+    featuredCakesQuery,
+    {},
+    { next: { revalidate: 60, tags: ['cake', 'featured'] } }
+  )
+}
+
+const formatPrice = (eur: number) => {
+  const euro = eur.toFixed(2)
+  const bgn = (eur * 1.95583).toFixed(2)
+  return `${euro}€ | ${bgn} лв`
+}
+
+export default async function FeaturedProducts() {
+  const featuredProducts = await getFeaturedCakes()
   return (
     <section className="py-16" style={{ backgroundColor: '#f6edf6' }}>
       <div className="max-w-7xl mx-auto px-4">
@@ -68,13 +64,13 @@ export default function FeaturedProducts() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {featuredProducts.map((product) => (
             <Link
-              key={product.id}
-              href={product.href}
+              key={product._id}
+              href={`/торти/${encodeURIComponent(product.slug)}`}
               className="group rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative aspect-square overflow-hidden">
                 <Image
-                  src={product.image}
+                  src={product.imageUrl}
                   alt={product.name}
                   fill
                   sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -84,16 +80,19 @@ export default function FeaturedProducts() {
               </div>
               <div className="p-4 text-left">
                 <h3
-                  className="text-xl font-semibold mb-1"
+                  className="text-xl mb-1"
                   style={{ color: '#500050', fontFamily: 'IdealistSans, sans-serif' }}
                 >
                   {product.name}
                 </h3>
                 <p
-                  className="text-lg font-bold"
+                  className="text-lg font-bold flex items-baseline justify-between"
                   style={{ color: '#500050', fontFamily: 'IdealistSans, sans-serif' }}
                 >
-                  {calculateEuro(product.price)}€ | {product.price.replace(' лв/парче', 'лв')}
+                  <span>{formatPrice(product.price)}</span>
+                  {product.priceUnit ? (
+                    <span className="text-lg font-bold ml-3">{product.priceUnit}</span>
+                  ) : null}
                 </p>
               </div>
             </Link>
@@ -103,7 +102,7 @@ export default function FeaturedProducts() {
         {/* View All Button */}
         <div className="text-center mt-12">
           <Link
-            href="/torti"
+            href="/торти"
             className="inline-block px-8 py-3 rounded-full font-medium transition-all hover:scale-105 border-2"
             style={{
               backgroundColor: 'transparent',

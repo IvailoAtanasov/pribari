@@ -21,6 +21,7 @@ type DetailActionsProps = {
   dropdownAllergens?: string
   dropdownStorage?: string
   dropdownTransport?: string
+  sizes?: number[]
 }
 
 function AccordionRow({
@@ -67,9 +68,14 @@ export default function DetailActions({
   dropdownAllergens,
   dropdownStorage,
   dropdownTransport,
+  sizes,
 }: DetailActionsProps) {
   const [quantity, setQuantity] = useState(1)
   const [date, setDate] = useState('')
+  const [selectedSize, setSelectedSize] = useState('')
+  const [customText, setCustomText] = useState('')
+  const [deliveryMethod, setDeliveryMethod] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('')
 
   return (
     <div className="space-y-4">
@@ -98,6 +104,41 @@ export default function DetailActions({
         </div>
       </div>
 
+      {sizes && sizes.length > 0 && (
+        <div className="space-y-2">
+          <label className="text-base" style={{ color: '#500050' }}>
+            Размер
+          </label>
+          <select
+            value={selectedSize}
+            onChange={(e) => setSelectedSize(e.target.value)}
+            className="w-full border border-[#500050]/30 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#500050]/50"
+            style={{ borderRadius: 0, minHeight: '42px', color: selectedSize ? '#500050' : '#6b7280', backgroundColor: '#f6edf6' }}
+          >
+            <option value="" disabled>Изберете брой парчета</option>
+            {sizes.map((size) => (
+              <option key={size} value={size} style={{ color: '#500050' }}>
+                {size} парчета
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <label className="text-base" style={{ color: '#500050' }}>
+          Надпис по желание
+        </label>
+        <input
+          type="text"
+          value={customText}
+          onChange={(e) => setCustomText(e.target.value)}
+          placeholder="въведете надпис"
+          className="w-full border border-[#500050]/30 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#500050]/50 placeholder:text-gray-500"
+          style={{ borderRadius: 0, minHeight: '42px', backgroundColor: '#f6edf6' }}
+        />
+      </div>
+
       <div className="space-y-2">
         <label className="text-base" style={{ color: '#500050' }}>
           Избери дата за доставка/взимане
@@ -121,8 +162,39 @@ export default function DetailActions({
           
           lang="bg"
           className="w-full border border-[#500050]/30 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#500050]/50 placeholder:text-gray-500"
-          style={{ borderRadius: 0, minHeight: '42px' }} // Added min-height to prevent jumping
+          style={{ borderRadius: 0, minHeight: '42px', backgroundColor: '#f6edf6' }}
           />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-base" style={{ color: '#500050' }}>
+          Метод за доставка
+        </label>
+        <select
+          value={deliveryMethod}
+          onChange={(e) => setDeliveryMethod(e.target.value)}
+          className="w-full border border-[#500050]/30 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#500050]/50"
+          style={{ borderRadius: 0, minHeight: '42px', color: deliveryMethod ? '#500050' : '#6b7280', backgroundColor: '#f6edf6' }}
+        >
+          <option value="" disabled>Изберете метод</option>
+          <option value="delivery" style={{ color: '#500050' }}>Доставка на град София</option>
+          <option value="pickup" style={{ color: '#500050' }}>Взимане от място</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-base" style={{ color: '#500050' }}>
+          Метод на плащане
+        </label>
+        <select
+          value={paymentMethod}
+          onChange={(e) => setPaymentMethod(e.target.value)}
+          className="w-full border border-[#500050]/30 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#500050]/50"
+          style={{ borderRadius: 0, minHeight: '42px', color: paymentMethod ? '#500050' : '#6b7280', backgroundColor: '#f6edf6' }}
+        >
+          <option value="" disabled>Изберете метод</option>
+          <option value="cash" style={{ color: '#500050' }}>Плащане при доставка</option>
+        </select>
       </div>
 
       <button

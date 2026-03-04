@@ -57,13 +57,14 @@ export default function Footer() {
               >
                 Контакти
               </h3>
-              <div
-                className="flex items-center gap-3 text-gray-700"
+              <a
+                href="tel:+359885650835"
+                className="flex items-center gap-3 text-gray-700 hover:text-[#500050] transition-colors"
                 style={{ fontFamily: 'IdealistSans, sans-serif' }}
               >
                 <Phone size={20} />
                 <span>+359 885 650 835</span>
-              </div>
+              </a>
             </div>
 
             {/* Social Links */}
