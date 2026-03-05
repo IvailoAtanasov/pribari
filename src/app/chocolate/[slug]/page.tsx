@@ -36,7 +36,7 @@ export default async function ChocolateDetailPage({ params }: { params: Promise<
   const rawSlug = Array.isArray(resolved.slug) ? resolved.slug[0] : resolved.slug
   if (!rawSlug) return notFound()
   
-  const slugParam = decodeURIComponent(rawSlug)
+  const slugParam = rawSlug
   const product = await getChocolate(slugParam)
 
   if (!product) return notFound()

@@ -65,7 +65,7 @@ export default async function FeaturedProducts() {
           {featuredProducts.map((product) => (
             <Link
               key={product._id}
-              href={`/торти/${encodeURIComponent(product.slug)}`}
+              href={`/torti/${product.slug}`}
               className="group rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative aspect-square overflow-hidden">
@@ -102,7 +102,7 @@ export default async function FeaturedProducts() {
         {/* View All Button */}
         <div className="text-center mt-12">
           <Link
-            href="/торти"
+            href="/torti"
             className="inline-block px-8 py-3 rounded-full font-medium transition-all hover:scale-105 border-2"
             style={{
               backgroundColor: 'transparent',

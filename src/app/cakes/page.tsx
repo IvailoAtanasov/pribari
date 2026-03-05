@@ -83,7 +83,7 @@ export default async function TortiPage() {
             {cakeCategories.map((category) => (
               <Link
                 key={category._id}
-                href={`/торти/${category.slug}`}
+                href={`/torti/${category.slug}`}
                 className="group rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="relative aspect-square overflow-hidden">

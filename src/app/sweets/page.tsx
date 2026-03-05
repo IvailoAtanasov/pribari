@@ -91,7 +91,7 @@ export default async function SweetsPage() {
             {sweetsProducts.map((product: Sweet) => (
               <Link
                 key={product._id}
-                href={`/сладкиши/${encodeURIComponent(product.slug)}`}
+                href={`/sladkishi/${product.slug}`}
                 className="group rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="relative aspect-square overflow-hidden">

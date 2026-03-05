@@ -102,8 +102,7 @@ export default async function CakeOrCategoryPage({ params }: { params: Promise<{
   const rawSlug = Array.isArray(resolved.slug) ? resolved.slug[0] : resolved.slug
   if (!rawSlug) return notFound()
   
-  // Decode URL-encoded Bulgarian slugs
-  const slugParam = decodeURIComponent(rawSlug)
+  const slugParam = rawSlug
 
   // First check if this is a category
   const category = await getCategory(slugParam)
@@ -150,7 +149,7 @@ export default async function CakeOrCategoryPage({ params }: { params: Promise<{
                 {cakes.map((product: Cake) => (
                   <Link
                     key={product._id}
-                    href={`/торти/${product.slug}`}
+                    href={`/torti/${product.slug}`}
                     className="group rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
                   >
                     <div className="relative aspect-square overflow-hidden">

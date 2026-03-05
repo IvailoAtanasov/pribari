@@ -3,30 +3,26 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { User, Menu, X, Facebook, Instagram, ShoppingBag, ChevronDown } from 'lucide-react'
-// 1. Import Clerk Components
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 
+type CakeCategory = {
+  title: string
+  slug: string
+}
 
-const cakeCategories = [
-  { href: '/торти/детски', label: 'Детски' },
-  { href: '/торти/рожден-ден', label: 'Рожден ден' },
-  { href: '/торти/сватбени', label: 'Сватбени' },
-  { href: '/торти/юбилей', label: 'Юбилей' },
-  { href: '/торти/бенто', label: 'Бенто' },
-  { href: '/торти/празнични', label: 'Празнични' },
-  { href: '/торти/фирмени', label: 'Фирмени' },
-  { href: '/торти/класически', label: 'Класически' },
-]
+type NavbarProps = {
+  cakeCategories: CakeCategory[]
+}
 
 const navLinks = [
-  { href: '/сладкиши', label: 'Сладкиши' },
-  { href: '/шоколад', label: 'Шоколад' },
-  { href: '/кетъринг', label: 'Кетъринг' },
+  { href: '/sladkishi', label: 'Сладкиши' },
+  { href: '/shokolad', label: 'Шоколад' },
+  { href: '/ketering', label: 'Кетъринг' },
   { href: '#', label: 'За Нас' },
   { href: '#', label: 'Контакти' },
 ]
 
-export default function Navbar() {
+export default function Navbar({ cakeCategories }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isCakesOpen, setIsCakesOpen] = useState(false)
   const [isMobileCakesOpen, setIsMobileCakesOpen] = useState(false)
@@ -60,7 +56,7 @@ export default function Navbar() {
             onMouseLeave={() => setIsCakesOpen(false)}
           >
             <Link
-              href="/торти"
+              href="/torti"
               className="flex items-center gap-1 text-gray-700 hover:text-[#500050] transition-colors font-medium"
               style={{ fontFamily: 'IdealistSans, sans-serif' }}
             >
@@ -74,13 +70,13 @@ export default function Navbar() {
                   style={{ backgroundColor: '#f6edf6' }}
                 >
                   {cakeCategories.map((cat) => (
-                    <li key={cat.label}>
+                    <li key={cat.slug}>
                       <Link
-                        href={cat.href}
+                        href={`/torti/${cat.slug}`}
                         className="block px-4 py-2 text-gray-700 hover:text-[#500050] hover:bg-white/50 transition-colors font-medium"
                         style={{ fontFamily: 'IdealistSans, sans-serif' }}
                       >
-                        {cat.label}
+                        {cat.title}
                       </Link>
                     </li>
                   ))}
@@ -118,7 +114,7 @@ export default function Navbar() {
         {/* User Icon - Right (Desktop) */}
         <div className="w-[207px] flex-shrink-0 hidden md:flex justify-end items-center gap-2">
           <Link
-            href="/кошница"
+            href="/koshnitsa"
             className="flex items-center justify-center p-2 text-gray-700 hover:text-[#500050] transition-colors"
             aria-label="Кошница"
           >
@@ -149,7 +145,7 @@ export default function Navbar() {
         {/* Mobile cart + menu button */}
         <div className="md:hidden flex items-center ml-auto gap-2">
           <Link
-            href="/кошница"
+            href="/koshnitsa"
             className="p-2 text-gray-700 hover:text-[#500050] transition-colors"
             aria-label="Кошница"
           >
@@ -186,14 +182,14 @@ export default function Navbar() {
             {isMobileCakesOpen && (
               <ul className="bg-white/30">
                 {cakeCategories.map((cat) => (
-                  <li key={cat.label}>
+                  <li key={cat.slug}>
                     <Link
-                      href={cat.href}
+                      href={`/torti/${cat.slug}`}
                       onClick={() => setIsMenuOpen(false)}
                       className="block px-10 py-2 text-gray-600 hover:text-[#500050] hover:bg-white/50 transition-colors"
                       style={{ fontFamily: 'IdealistSans, sans-serif' }}
                     >
-                      {cat.label}
+                      {cat.title}
                     </Link>
                   </li>
                 ))}

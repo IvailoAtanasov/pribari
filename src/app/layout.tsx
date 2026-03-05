@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import PromoBanner from "@/components/layout/PromoBanner";
-import Navbar from "@/components/layout/Navbar";
+import NavbarWrapper from "@/components/layout/NavbarWrapper";
 import DiscountBanner from "@/components/DiscountBanner";
 import { ClerkProvider } from '@clerk/nextjs'
 import { bgBG } from "@clerk/localizations";
@@ -130,7 +130,7 @@ export default function RootLayout({
         }}
         >
           <PromoBanner />
-          <Navbar />
+          <NavbarWrapper />
           <DiscountBanner />
           {children}
           <Footer />

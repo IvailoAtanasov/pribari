@@ -16,30 +16,22 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
-      // Bulgarian URLs rewrite to English routes
-      // торти main page
-      { source: '/%D1%82%D0%BE%D1%80%D1%82%D0%B8', destination: '/cakes' },
-      // торти/:slug - pass any slug (category or cake) to the dynamic route
-      { source: '/%D1%82%D0%BE%D1%80%D1%82%D0%B8/:slug*', destination: '/cakes/:slug*' },
-      // кошница
-      { source: '/%D0%BA%D0%BE%D1%88%D0%BD%D0%B8%D1%86%D0%B0', destination: '/cart' },
-      // сладкиши
-      { source: '/%D1%81%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8%D1%88%D0%B8', destination: '/sweets' },
-      // сладкиши/:slug
-      { source: '/%D1%81%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8%D1%88%D0%B8/:slug*', destination: '/sweets/:slug*' },
-      // шоколад
-      { source: '/%D1%88%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4', destination: '/chocolate' },
-      // шоколад/:slug
-      { source: '/%D1%88%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4/:slug*', destination: '/chocolate/:slug*' },
-      // кетъринг
-      { source: '/%D0%BA%D0%B5%D1%82%D1%8A%D1%80%D0%B8%D0%BD%D0%B3', destination: '/ketering' },
+      // Transliterated URLs rewrite to English routes
+      { source: '/torti', destination: '/cakes' },
+      { source: '/torti/:slug*', destination: '/cakes/:slug*' },
+      { source: '/koshnitsa', destination: '/cart' },
+      { source: '/sladkishi', destination: '/sweets' },
+      { source: '/sladkishi/:slug*', destination: '/sweets/:slug*' },
+      { source: '/shokolad', destination: '/chocolate' },
+      { source: '/shokolad/:slug*', destination: '/chocolate/:slug*' },
+      { source: '/ketering', destination: '/ketering' },
     ];
   },
   async redirects() {
     return [
       {
         source: '/menu.html',
-        destination: '/торти',
+        destination: '/torti',
         permanent: true,
       },
     ];

@@ -36,25 +36,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      url: `${BASE_URL}/торти`,
+      url: `${BASE_URL}/torti`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/сладкиши`,
+      url: `${BASE_URL}/sladkishi`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/шоколад`,
+      url: `${BASE_URL}/shokolad`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/кетъринг`,
+      url: `${BASE_URL}/ketering`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
@@ -63,7 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Category pages
   const categoryPages: MetadataRoute.Sitemap = categories.map((category) => ({
-    url: `${BASE_URL}/торти/${encodeURIComponent(category.slug)}`,
+    url: `${BASE_URL}/torti/${category.slug}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
     priority: 0.8,
@@ -71,7 +71,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Individual cake pages
   const cakePages: MetadataRoute.Sitemap = cakes.map((cake) => ({
-    url: `${BASE_URL}/торти/${encodeURIComponent(cake.slug)}`,
+    url: `${BASE_URL}/torti/${cake.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.7,
